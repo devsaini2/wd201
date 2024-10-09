@@ -56,32 +56,45 @@ fs.readFile("home.html", (err, home) => {
     })
     .listen(3000);
 });*/
-const http = require("http");
-const fs = require("fs");
+const args  = require("minimist")(process.argv.slice(2));
+const a = parseInt(args.port);
+
+import { createServer } from "http";
+import { readFile } from "fs";
 
 let homeContent = "";
 let projectContent = "";
+let registrationContent = "";
 
-fs.readFile("home.html", (err, home) => {
+readFile("home.html", (err, home) => {
   if (err) {
     throw err;
   }
   homeContent = home;
 });
 
-fs.readFile("project.html", (err, project) => {
+readFile("project.html", (err, project) => {
   if (err) {
     throw err;
   }
   projectContent = project;
 });
-http
-  .createServer((request, response) => {
+readFile("registration.html", (err, project) => {
+  if (err) {
+    throw err;
+  }
+  registrationContent = registration;
+});
+createServer((request, response) => {
     let url = request.url;
     response.writeHeader(200, { "Content-Type": "text/html" });
     switch (url) {
       case "/project":
         response.write(projectContent);
+        response.end();
+        break;
+        case "/registration":
+        response.write(registrationContent);
         response.end();
         break;
       default:
@@ -90,4 +103,4 @@ http
         break;
     }
   })
-  .listen(5000);
+  .listen(a);
