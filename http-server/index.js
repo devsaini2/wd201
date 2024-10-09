@@ -79,7 +79,7 @@ fs.readFile("project.html", (err, project) => {
   }
   projectContent = project;
 });
-fs.readFile("registration.html", (err, project) => {
+fs.readFile("registration.html", (err, registration) => {
   if (err) {
     throw err;
   }
@@ -94,7 +94,7 @@ http.createServer((request, response) => {
         response.write(projectContent);
         response.end();
         break;
-        case "/registration":
+      case "/registration":
         response.write(registrationContent);
         response.end();
         break;
