@@ -1,37 +1,41 @@
 const todoList = () => {
-    all = []
+    let all = []
     const add = (todoItem) => {
       all.push(todoItem)
     }
     const markAsComplete = (index) => {
       all[index].completed = true
     }
+
   
     const overdue = () => {
       // Write the date check condition here and return the array of overdue items accordingly.
-      let list = all.filter((i) => i.dueDate < today);
+      const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split("T")[0];
+      let list = all.filter(item => item.dueDate < yesterday && !item.completed);
       return list;
     }
   
     const dueToday = () => {
       // Write the date check condition here and return the array of todo items that are due today accordingly.
-      let list = all.filter((i) => i.dueDate === today);
+      const today = new Date().toISOString().split("T")[0];
+      let list = all.filter(item => item.dueDate === today);
       return list;
     }
   
     const dueLater = () => {
       // Write the date check condition here and return the array of todo items that are due later accordingly.
-      let list = all.filter((i) => i.dueDate > today);
+      const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split("T")[0];
+      let list = all.filter(item => item.dueDate > tomorrow);
       return list;
     }
   
     const toDisplayableList = (list) => {
       // Format the To-Do list here, and return the output string as per the format given above.
-    const display = (item) => {
-      let displayMarker = item.completed ? "[x]" : "[ ]";
-      let displayDate = item.dueDate === today ? "" : item.dueDate;
-      return [displayMarker, item.title, displayDate].join(" ");
-    }
+      return list.map(item => {
+        const displayStatus = item.completed ? "[x]" : "[ ]";
+        return `${displayStatus} ${item.title} ${item.dueDate === formattedDate(new Date()) ? '' : item.dueDate}`;
+      }).join("\n");
+    };
   
     return {
       all,
@@ -88,4 +92,3 @@ const todoList = () => {
   let formattedItemsDueLater = todos.toDisplayableList(itemsDueLater)
   console.log(formattedItemsDueLater)
   console.log("\n\n")
-}
