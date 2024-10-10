@@ -11,7 +11,7 @@ const todoList = () => {
     const overdue = () => {
       // Write the date check condition here and return the array of overdue items accordingly.
       const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split("T")[0];
-      let list = all.filter(item => item.dueDate < yesterday && !item.completed);
+      let list = all.filter(item => item.dueDate < yesterday);
       return list;
     }
   
@@ -33,7 +33,9 @@ const todoList = () => {
       // Format the To-Do list here, and return the output string as per the format given above.
       return list.map(item => {
         const displayStatus = item.completed ? "[x]" : "[ ]";
-        return `${displayStatus} ${item.title} ${item.dueDate === formattedDate(new Date()) ? '' : item.dueDate}`;
+        return item.dueDate === formattedDate(new Date())
+          ? `${displayStatus} ${item.title}`
+          : `${displayStatus} ${item.title} ${item.dueDate}`;
       }).join("\n");
     };
   
