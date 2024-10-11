@@ -14,7 +14,7 @@ const todoList = () => {
 
   const dueToday = () => {
     // Write the date check condition here and return the array of todo items that are due today accordingly.
-    return all.filter((item) => item.dueDate === newDate().toISOString().slice(0,10));
+    return all.filter((item) => item.dueDate === new Date().toISOString().slice(0,10));
   }
 
   const dueLater = () => {
