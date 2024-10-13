@@ -1,5 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
+const { Op } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -83,9 +84,13 @@ module.exports = (sequelize, DataTypes) => {
 
     displayableString() {
       let checkbox = this.completed ? '[x]' : '[ ]';
+      if (this.dueDate === today) {
+        return `${this.id}. ${checkbox} ${this.title}`;
+      }
       return `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`;
     }
   }
+
   Todo.init(
     {
       title: DataTypes.STRING,
