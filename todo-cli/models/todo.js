@@ -1,6 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
-const { Op } = require('sequelize')
+const { Op } = require('sequelize');
+const today = new Date().toISOString().split("T")[0];
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
