@@ -14,13 +14,18 @@ describe("Todo test suit", () => {
 
 
   afterAll(async () => {
-    await db.sequelize.close();
-    server.close();
+    try{
+      await db.sequelize.close();
+      await server.close();
+    }
+    catch (error) {
+      console.log(error);
+    }   
   });
 
   test("responds with json at /todos", async () => {
     const response = await agent.post("/todos").send({
-      title: "Todo 1",
+      title: "Todo title 1",
       dueDate: new Date().toISOString(),
       completed: false,
     });
@@ -35,7 +40,7 @@ describe("Todo test suit", () => {
 
   test("mark a todo as completed", async () => {
      const response = await agent.post("/todos").send({
-       title: "Todo 1",
+       title: "Todo title 1",
        dueDate: new Date().toISOString(),
      });
      const parsedResponse = JSON.parse(response.text);
@@ -50,9 +55,28 @@ describe("Todo test suit", () => {
      expect(parsedMarkCompleteResponse.completed).toBe(true);
     });
 
+    
+    test("Fetches all todos in the database using /todos Endpoint", async () => {
+      await agent.post("/todos").send({
+        title: "Fetch todos title",
+        dueDate: new Date().toISOString(),
+        completed: false,
+      });
+      await agent.post("/todos").send({
+        title: "Buy tiltle",
+        dueDate: new Date().toISOString(),
+        completed: false,
+      });
+      const response = await agent.get("/todos");
+      const parsedResponse = JSON.parse(response.text);
+  
+      expect(parsedResponse.length).toBe(4);
+      expect(parsedResponse[3]["title"]).toBe("Buy title");
+    });
+
   test("Deletes a todo with the given ID if it exists", async () => {
      const response = await agent.post("/todos").send({
-       title: "Todo 1",
+       title: "Delete title",
        dueDate: new Date().toISOString(),
      });
      const parsedResponse = JSON.parse(response.text);
@@ -69,17 +93,4 @@ describe("Todo test suit", () => {
   });
 
   // Removed 
-  test("mark a todo as completed", async () => {
-       const response = await agent.post("/todos").send({
-         title: "Todo 1",
-         dueDate: new Date().toISOString(),
-       });
-       const todoid = response.body.id; // Ensure this retrieves the ID
-  
-       const markCompleteResponse = await agent
-         .put(`/todos/${todoid}`)
-         .send({ status: true }); // Sending the new completion status
-       const parsedMarkCompleteResponse = JSON.parse(markCompleteResponse.text);
-       expect(parsedMarkCompleteResponse.completed).toBe(true);
-     });
 });
