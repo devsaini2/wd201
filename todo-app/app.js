@@ -34,10 +34,9 @@ app.get("/todos", async (req, res) => {
     console.error(error);
     res.status(404).json({ error: "Failed to Fetch todos" });
   }
-});
+});*/
 
 app.post("/todos", async (request, response) => {
-  const
   const { title, dueDate } = request.body;
 
   if (!title || !dueDate) {
@@ -94,7 +93,10 @@ app.delete("/todos/:id", async function (request, response) {
   }
 });
 
-module.exports = app;*/
+// video content
+app.get("/todos", (request, response) =>{
+  console.log("Todo List")
+})
 app.post("/todos", async (request, response) => {
   console.log("creating a todo", request.body);
   try{
