@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 const request = require("supertest");
-
 const db = require("../models/index");
 const app = require("../app");
 
@@ -26,10 +25,43 @@ describe("Todo test suit", () => {
       completed: false,
     });
     expect(response.statusCode).toBe(302);
-    // content removed
+    expect(response.headers["content-type"]).toBe(
+    "application/json; charset=utf-8",
+    );
+
+    const parsedResponse = JSON.parse(response.text);
+     expect(parsedResponse.id).toBeDefined();
   });
 
-  //contebn removed
+  test("mark a todo as completed", async () => {
+     const response = await agent.post("/todos").send({
+       title: "Todo 1",
+       dueDate: new Date().toISOString(),
+     });
+     const parsedResponse = JSON.parse(response.text);
+     const todoid = parsedResponse.id;
+
+     expect(parsedResponse.completed).toBe(false);
+
+    const markCompleteResponse = await agent
+       .put(`/todos/${todoid}/markAsCompleted`)
+       .send();
+     const parsedMarkCompleteResponse = JSON.parse(markCompleteResponse.text);
+     expect(parsedMarkCompleteResponse.completed).toBe(true);
+    });
+
+  test("Deletes a todo with the given ID if it exists", async () => {
+     const response = await agent.post("/todos").send({
+       title: "Todo 1",
+       dueDate: new Date().toISOString(),
+     });
+     const parsedResponse = JSON.parse(response.text);
+     const todoid = parsedResponse.id;
+     const deleteResponse = await agent.delete(`/todos/${todoid}`);
+
+     expect(deleteResponse.statusCode).toBe(200);
+   });
+
 
   test("Returns False for an non-existing ID", async () => {
     const response = await request(app).delete("/todos/999");
@@ -37,4 +69,17 @@ describe("Todo test suit", () => {
   });
 
   // Removed 
+  test("mark a todo as completed", async () => {
+       const response = await agent.post("/todos").send({
+         title: "Todo 1",
+         dueDate: new Date().toISOString(),
+       });
+       const todoid = response.body.id; // Ensure this retrieves the ID
+  
+       const markCompleteResponse = await agent
+         .put(`/todos/${todoid}`)
+         .send({ status: true }); // Sending the new completion status
+       const parsedMarkCompleteResponse = JSON.parse(markCompleteResponse.text);
+       expect(parsedMarkCompleteResponse.completed).toBe(true);
+     });
 });
