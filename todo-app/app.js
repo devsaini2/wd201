@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.set("View Engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
-/*app.get("/", async (req, res) => {
+app.get("/", async (req, res) => {
   try {
     const allTodos = await Todo.getTodos();
     if (req.accepts("html")) {
@@ -34,7 +34,7 @@ app.get("/todos", async (req, res) => {
     console.error(error);
     res.status(404).json({ error: "Failed to Fetch todos" });
   }
-});*/
+});
 
 app.post("/todos", async (request, response) => {
   const { title, dueDate } = request.body;
@@ -122,7 +122,7 @@ app.put("/todos/:id/markAsCompleted", async (request, response) => {
   }
 });
 
-app.delete("todos/:id", (request, response) => {
+/*app.delete("todos/:id", (request, response) => {
   console.log("Deleted a todo by id:", request.params.id);
-});
+});*/
 module.exports = app;
