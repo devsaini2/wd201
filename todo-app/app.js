@@ -67,20 +67,23 @@ app.put("/todos/:id/markAsCompleted", async (request, response) => {
    });
 
 // Delete a todo by the required 
-app.delete("/todos/:id", async (request, response) => {
-  console.log("We have to deletes a todo with the given ID: ", request.params.id);
-
-  try {
-    const deleted = await Todo.remove(request.params.id);
-    if (deleted) {
-      return response.json({ success: true });
-    } else {
-      return response.json(false);
+app.delete(
+  "/todos/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, res) => {
+    console.log("We have to delete a Todo with ID: ", req.params.id);
+    try {
+      await Todo.remove(req.params.id, req.user.id);
+      const check = await Todo.findByPk(req.params.id);
+      if (check) {
+        return res.json({ success: false });
+      }
+      return res.json({ success: true });
+    } catch (error) {
+      return res.status(422).json(error);
     }
-  } catch (error) {
-    return response.status(422).json(error);
   }
-});
+);
 
 
 // Render the main page with todos 
