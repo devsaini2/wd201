@@ -45,21 +45,6 @@ app.get("/todos", async (req, res) => {
 });
 
 // Mark a todo as completed this is required
-/*app.put("/todos/:id/markAsCompleted", async (req, res) => {
-  const todoId = req.params.id;
-
-  try {
-    const todo = await Todo.findByPk(todoId);
-    if (!todo) {
-      return res.status(404).send("Todo not found");
-    }
-    const updatedTodo = await todo.markAsCompleted();
-    return res.json(updatedTodo);
-  } catch (error) {
-    console.log(error);
-    return res.status(422).json(error);
-  }
-});*/
 
 app.put("/todos/:id/markAsCompleted", async (request, response) => {
      console.log("We have updated a todo with ID: ", request.params.id);
@@ -82,15 +67,15 @@ app.put("/todos/:id/markAsCompleted", async (request, response) => {
    });
 
 // Delete a todo by the required 
-app.delete("/todos/:id", async function (request, response) {
+app.delete("/todos/:id", async (request, response) => {
   console.log("We have to deletes a todo with the given ID: ", request.params.id);
 
   try {
-    const todo = await Todo.remove(request.params.id);
-    if (todo) {
+    const deleted = await Todo.remove(request.params.id);
+    if (deleted) {
       return response.json({ success: true });
     } else {
-      return response.json(false);
+      return response.status(404).json({ success: false, message: "Todo not found" });
     }
   } catch (error) {
     return response.status(422).json(error);
