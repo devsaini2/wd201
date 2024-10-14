@@ -70,14 +70,14 @@ app.put("/todos/:id/markAsCompleted", async (request, response) => {
          return response.status(404).json({ error: "Todo not found" });
        }
   
-       // Update the completed status
+       // Update the completed status in todo
        todo.completed = true;
-       await todo.save(); // Save the changes
+       await todo.save(); // Save the changes of todo
   
-       return response.json(todo); // Return the updated todo
+       return response.json(todo); // Return the updated todo .
      } catch (error) {
        console.error(error);
-       return response.status(500).json({ error: "Failed to update todo" });
+       return response.status(500).json({ error: "Failed to Update todo" });
      }
    });
 
