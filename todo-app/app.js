@@ -72,15 +72,12 @@ app.delete("/todos/:id", async (request, response) => {
 
   try {
     const deleted = await Todo.remove(request.params.id);
-    if (deleted) {
-      return response.json({ success: true });
-    } else {
-      return response.status(404).json({ success: false, message: "Todo not found" });
-    }
-  } catch (error) {
+      return response.json({ success: !!deleted });
+    } catch (error) {
     return response.status(422).json(error);
   }
 });
+
 
 // Render the main page with todos 
 app.get("/", async (req, res) => {
