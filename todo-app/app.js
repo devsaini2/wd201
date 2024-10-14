@@ -45,7 +45,7 @@ app.get("/todos", async (req, res) => {
 });
 
 // Mark a todo as completed this is required
-app.put("/todos/:id/markAsCompleted", async (req, res) => {
+/*app.put("/todos/:id/markAsCompleted", async (req, res) => {
   const todoId = req.params.id;
 
   try {
@@ -59,25 +59,45 @@ app.put("/todos/:id/markAsCompleted", async (req, res) => {
     console.log(error);
     return res.status(422).json(error);
   }
-});
+});*/
+
+app.put("/todos/:id/markAsCompleted", async (request, response) => {
+     console.log("We have updated a todo with ID: ", request.params.id);
+  
+     try {
+       const todo = await Todo.findByPk(request.params.id);
+       if (!todo) {
+         return response.status(404).json({ error: "Todo not found" });
+       }
+  
+       // Update the completed status
+       todo.completed = true;
+       await todo.save(); // Save the changes
+  
+       return response.json(todo); // Return the updated todo
+     } catch (error) {
+       console.error(error);
+       return response.status(500).json({ error: "Failed to update todo" });
+     }
+   });
 
 // Delete a todo by the required 
-app.delete("/todos/:id", async (req, res) => {
-  const todoId = req.params.id;
+app.delete("/todos/:id", async function (request, response) {
+  console.log("We have to deletes a todo with the given ID: ", request.params.id);
 
   try {
-    const deleted = await Todo.remove(todoId);
-    if (deleted) {
-      return res.json({ success: true });
+    const todo = await Todo.remove(request.params.id);
+    if (todo) {
+      return response.json({ success: true });
     } else {
-      return res.status(404).json({ success: false, message: "Todo not found" });
+      return response.json(false);
     }
   } catch (error) {
-    return res.status(422).json(error);
-  }  
+    return response.status(422).json(error);
+  }
 });
 
-// Render the main page with todos fetch data
+// Render the main page with todos 
 app.get("/", async (req, res) => {
   try {
     const allTodos = await Todo.getTodos();
