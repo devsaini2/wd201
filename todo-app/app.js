@@ -72,8 +72,12 @@ app.delete("/todos/:id", async (request, response) => {
 
   try {
     const deleted = await Todo.remove(request.params.id);
-      return response.json({ success: !!deleted });
-    } catch (error) {
+    if (deleted) {
+      return response.json({ success: true });
+    } else {
+      return response.json(false);
+    }
+  } catch (error) {
     return response.status(422).json(error);
   }
 });

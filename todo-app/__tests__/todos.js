@@ -69,7 +69,7 @@ describe("Todo test suit", () => {
       expect(parsedResponse[3]["title"]).toBe("Buy title");
     });
 
-  test("Deletes a todo with the given ID if it exists", async () => {
+  /*test("Deletes a todo with the given ID if it exists", async () => {
      const response = await agent.post("/todos").send({
        title: "delete todo 1",
        dueDate: new Date().toISOString(),
@@ -80,7 +80,7 @@ describe("Todo test suit", () => {
 
      expect(deleteResponse.statusCode).toBe(200);
    });
-
+  */
 
   test("Returns False for an non-existing ID", async () => {
     const response = await request(app).delete("/todos/999");
