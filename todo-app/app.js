@@ -14,31 +14,6 @@ app.use(express.urlencoded({ extended: true }));
 app.set("View Engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", async (req, res) => {
-  try {
-    const allTodos = await Todo.getTodos();
-    if (req.accepts("html")) {
-      res.render("index", { allTodos });
-    } else res.json(allTodos);
-  } catch (error) {
-    console.error(error);
-    res.status(404).json({ error: "Failed to Fetch todos" });
-  }
-});
-
-app.get("/todos", async (req, res) => {
-  try {
-    const todos = await Todo.findAll();
-    res.json(todos);
-  } catch (error) {
-    console.error(error);
-    res.status(404).json({ error: "Failed to Fetch todos" });
-  }
-});
-// video content
-app.get("/todos", (request, response) =>{
-  console.log("Todo List")
-})
 app.post("/todos", async (request, response) => {
   console.log("creating a todo", request.body);
   try{
@@ -52,6 +27,33 @@ app.post("/todos", async (request, response) => {
     return response.status(422).json(error);
   }
 })
+
+app.get("/", async (req, res) => {
+  try {
+    const allTodos = await Todo.getTodos();
+    if (req.accepts("html")) {
+      res.render("index", { allTodos });
+    } else res.json(allTodos);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ error: "Failed to Fetch todos" });
+  }
+});
+
+/*app.get("/todos", async (req, res) => {
+  try {
+    const todos = await Todo.findAll();
+    res.json(todos);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ error: "Failed to Fetch todos" });
+  }
+});*/
+// video content
+/*app.get("/todos", (request, response) =>{
+  console.log("Todo List")
+})*/
+
 app.put("/todos/:id/markAsCompleted", async (request, response) => {
   console.log("we have to update a todo with id:", request.params.id);
   const todo = await Todo.findByPk(request.params.id);
@@ -91,7 +93,7 @@ app.post("/todos", async (request, response) => {
 });
 
 //content removed from here 
-app.post("/todos/:id/update", async (req, res) => {
+/*app.post("/todos/:id/update", async (req, res) => {
   const todoId = req.params.id;
   const { completed } = req.body;
 
@@ -108,7 +110,7 @@ app.post("/todos/:id/update", async (req, res) => {
     console.error(error);
     return res.status(500).send("Failed to update todo");
   }
-});
+});*/
 
 app.delete("/todos/:id", async function (request, response) {
   console.log("We have to delete a Todo with ID: ", request.params.id);
